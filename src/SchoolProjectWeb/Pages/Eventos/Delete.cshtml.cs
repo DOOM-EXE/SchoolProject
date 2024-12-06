@@ -29,12 +29,14 @@ namespace SchoolProjectWeb.Pages_Eventos
                 return NotFound();
             }
 
-            var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
+            // Cargar el Evento con la Actividad relacionada usando Eager Loading (Include)
+            var evento = await _context.Eventos
+                .Include(e => e.Actividad)  // Incluir la propiedad Actividad relacionada
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (evento is not null)
             {
                 Evento = evento;
-
                 return Page();
             }
 

@@ -1,44 +1,57 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolProjectWeb.Data;
 using SchoolProjectWeb.Models;
 
-namespace SchoolProjectWeb.Pages_Estudiantes
+namespace SchoolProjectWeb.Pages.Estudiantes
 {
     public class CreateModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
+
+        [BindProperty]
+        public Estudiante Estudiante { get; set; } = new Estudiante(); 
 
         public IActionResult OnGet()
         {
             return Page();
         }
 
-        [BindProperty]
-        public Estudiante Estudiante { get; set; } = default!;
-
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
+            Console.WriteLine("Método OnPost llamado...");
+            Console.WriteLine($"Nombre: {Estudiante.Nombre}");
+            Console.WriteLine($"Apellido: {Estudiante.Apellido}");
+            Console.WriteLine($"Grado: {Estudiante.Grado}");
+            Console.WriteLine($"FechaNacimiento: {Estudiante.FechaNacimiento}");
+
             if (!ModelState.IsValid)
             {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Error de validación: {error.ErrorMessage}");
+                }
                 return Page();
             }
 
-            _context.Estudiantes.Add(Estudiante);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            try
+            {
+                _context.Estudiantes.Add(Estudiante);
+                _context.SaveChanges();
+                Console.WriteLine("Estudiante registrado exitosamente.");
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al guardar el estudiante: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Error al guardar el estudiante.");
+                return Page();
+            }
         }
     }
 }

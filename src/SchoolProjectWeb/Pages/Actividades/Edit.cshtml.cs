@@ -1,78 +1,57 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using SchoolProjectWeb.Data;
 using SchoolProjectWeb.Models;
 
-namespace SchoolProjectWeb.Pages_Actividades
+namespace SchoolProjectWeb.Pages.Actividades
 {
     public class EditModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Actividad Actividad { get; set; } = default!;
+        public Actividad Actividad { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int id)
         {
-            if (id == null)
+            Actividad = _context.Actividades.FirstOrDefault(a => a.Id == id);
+            if (Actividad == null)
             {
                 return NotFound();
             }
 
-            var actividad =  await _context.Actividades.FirstOrDefaultAsync(m => m.Id == id);
-            if (actividad == null)
-            {
-                return NotFound();
-            }
-            Actividad = actividad;
-           ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Id");
+            // Cargar la lista de profesores en ViewData para el dropdown
+            ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Nombre");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
+            // Lógica de validación y guardado
             if (!ModelState.IsValid)
             {
+                ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Nombre");
                 return Page();
             }
 
-            _context.Attach(Actividad).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                _context.Attach(Actividad).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ActividadExists(Actividad.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                ModelState.AddModelError(string.Empty, "Error al actualizar la actividad.");
+                ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Nombre");
+                return Page();
             }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool ActividadExists(int id)
-        {
-            return _context.Actividades.Any(e => e.Id == id);
         }
     }
 }

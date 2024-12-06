@@ -1,54 +1,45 @@
 @page
-@model SchoolProjectWeb.Pages_Actividades.CreateModel
+@model SchoolProjectWeb.Pages.Actividades.CreateModel
+@{
+    ViewData["Title"] = "Crear Actividad";
+}
 
-        @{
-        Layout = null;
-        }
-        
-        <!DOCTYPE html>
-        
-        <html>
-        <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Create</title>
-        </head>
-        <body>
-        
-    <h4>Actividad</h4>
-    <hr />
-    <div class="row">
-    <div class="col-md-4">
-    <form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<h1>Crear Actividad</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
             <div class="form-group">
-                <label asp-for="Actividad.NombreActividad" class="control-label"></label>
+                <label class="control-label">Nombre de la actividad</label>
                 <input asp-for="Actividad.NombreActividad" class="form-control" />
                 <span asp-validation-for="Actividad.NombreActividad" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Actividad.Descripcion" class="control-label"></label>
-                <input asp-for="Actividad.Descripcion" class="form-control" />
+                <label class="control-label">Descripción</label>
+                <textarea asp-for="Actividad.Descripcion" class="form-control"></textarea>
                 <span asp-validation-for="Actividad.Descripcion" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Actividad.CupoMaximo" class="control-label"></label>
-                <input asp-for="Actividad.CupoMaximo" class="form-control" />
+                <label class="control-label">Cupo Máximo</label>
+                <input asp-for="Actividad.CupoMaximo" class="form-control" type="number" />
                 <span asp-validation-for="Actividad.CupoMaximo" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Actividad.ProfesorId" class="control-label"></label>
-                <select asp-for="Actividad.ProfesorId" class ="form-control" asp-items="ViewBag.ProfesorId"></select>
+                <label class="control-label">Profesor encargado de la actividad</label>
+                <select asp-for="Actividad.ProfesorId" class="form-control" asp-items="ViewBag.ProfesorId"></select>
+                <span asp-validation-for="Actividad.ProfesorId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-page="Index" class="btn btn-secondary">Volver a la Lista</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
-</body>
-</html>

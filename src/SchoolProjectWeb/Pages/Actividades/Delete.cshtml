@@ -2,54 +2,114 @@
 @model SchoolProjectWeb.Pages_Actividades.DeleteModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Eliminar Actividad";
 }
 
-<!DOCTYPE html>
+<h1 class="text-center display-4">Eliminar Actividad</h1>
+<hr />
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-</head>
-<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-4">
+                <div class="card-body">
+                    <p class="lead">¿Estás seguro de que quieres eliminar esta actividad?</p>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Actividad</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Actividad.NombreActividad)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Actividad.NombreActividad)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Actividad.Descripcion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Actividad.Descripcion)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Actividad.CupoMaximo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Actividad.CupoMaximo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Actividad.Profesor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Actividad.Profesor.Id)
-        </dd>
-    </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Actividad.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
+                    <dl class="row">
+                        <dt class="col-sm-3 font-weight-bold">Nombre de la actividad</dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Actividad.NombreActividad)
+                        </dd>
+
+                        <dt class="col-sm-3 font-weight-bold">Descripción</dt>
+                        <dd class="col-sm-9" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            @Html.DisplayFor(model => model.Actividad.Descripcion)
+                        </dd>
+
+                        <dt class="col-sm-3 font-weight-bold">Cupo Máximo</dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Actividad.CupoMaximo)
+                        </dd>
+
+                        <dt class="col-sm-3 font-weight-bold">Profesor encargado</dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Actividad.Profesor.Nombre)
+                        </dd>
+                    </dl>
+
+                    <div class="form-group mt-4">
+                        <form method="post" id="deleteForm">
+                            <input type="hidden" asp-for="Actividad.Id" />
+                            <button type="button" class="btn btn-danger btn-lg" onclick="confirmDelete()">Eliminar</button>
+                            <a asp-page="./Index" class="btn btn-secondary btn-lg ml-3">Volver a la Lista</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
+<!-- Confirmación de eliminación -->
+<script>
+    function confirmDelete() {
+        if (confirm("Estas seguro de que quieres eliminar esta actividad?")) {
+            document.getElementById('deleteForm').submit();
+        }
+    }
+</script>
+
+<style>
+    .card {
+        border-radius: 15px;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .text-center {
+        color: #2a2a2a;
+        font-size: 2.5rem;
+    }
+
+    dt {
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    dd {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #dc3545;
+        border-color: #c82333;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .shadow-lg {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .row dd {
+        margin-bottom: 1rem;
+    }
+
+    .card-body dd {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+</style>

@@ -12,9 +12,9 @@ namespace SchoolProjectWeb.Pages_Eventos
 {
     public class DetailsModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -28,16 +28,18 @@ namespace SchoolProjectWeb.Pages_Eventos
                 return NotFound();
             }
 
-            var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
+            // Cargar el Evento con la Actividad relacionada usando Eager Loading (Include)
+            var evento = await _context.Eventos
+                .Include(e => e.Actividad)  // Incluir la propiedad Actividad relacionada
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (evento is not null)
+            if (evento == null)
             {
-                Evento = evento;
-
-                return Page();
+                return NotFound();
             }
 
-            return NotFound();
+            Evento = evento;
+            return Page();
         }
     }
 }

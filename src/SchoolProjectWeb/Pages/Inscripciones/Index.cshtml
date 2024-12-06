@@ -6,13 +6,18 @@
 
 <h1>Inscripciones</h1>
 
-<table class="table table-striped">
-    <thead>
+<!-- Botón para crear una nueva inscripción -->
+<a asp-page="./Create" class="btn btn-primary mb-3">Crear Inscripción</a>
+
+<!-- Tabla con listado de inscripciones -->
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>ID</th>
             <th>Estudiante</th>
             <th>Actividad</th>
             <th>Fecha de Inscripción</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +28,12 @@
                 <td>@item.Estudiante?.Nombre</td>
                 <td>@item.Actividad?.NombreActividad</td>
                 <td>@item.FechaInscripcion.ToShortDateString()</td>
+                <td>
+                    <!-- Botones de acción -->
+                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Detalles</a>
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
             </tr>
         }
     </tbody>

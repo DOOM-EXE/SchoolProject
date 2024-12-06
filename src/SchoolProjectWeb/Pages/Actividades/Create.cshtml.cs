@@ -1,45 +1,65 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolProjectWeb.Data;
 using SchoolProjectWeb.Models;
 
-namespace SchoolProjectWeb.Pages_Actividades
+namespace SchoolProjectWeb.Pages.Actividades
 {
     public class CreateModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        [BindProperty]
+        public Actividad Actividad { get; set; }
+
         public IActionResult OnGet()
         {
-        ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Id");
+            ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Nombre");
             return Page();
         }
 
-        [BindProperty]
-        public Actividad Actividad { get; set; } = default!;
-
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
+            Console.WriteLine("Método OnPost llamado...");
+            Console.WriteLine($"NombreActividad: {Actividad.NombreActividad}");
+            Console.WriteLine($"Descripcion: {Actividad.Descripcion}");
+            Console.WriteLine($"CupoMaximo: {Actividad.CupoMaximo}");
+            Console.WriteLine($"ProfesorId: {Actividad.ProfesorId}");
+
             if (!ModelState.IsValid)
             {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Error de validación: {error.ErrorMessage}");
+                }
+                ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Nombre");
                 return Page();
             }
 
-            _context.Actividades.Add(Actividad);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            try
+            {
+                _context.Actividades.Add(Actividad);
+                _context.SaveChanges();
+                Console.WriteLine("Actividad creada exitosamente.");
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al guardar la actividad: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Error al guardar la actividad.");
+                ViewData["ProfesorId"] = new SelectList(_context.Profesores, "Id", "Nombre");
+                return Page();
+            }
         }
+
     }
+
 }
+
+
