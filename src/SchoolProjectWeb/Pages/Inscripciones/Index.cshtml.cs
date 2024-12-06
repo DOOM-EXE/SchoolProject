@@ -1,31 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SchoolProjectWeb.Data;
 using SchoolProjectWeb.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace SchoolProjectWeb.Pages_Inscripciones
+namespace SchoolProjectWeb.Pages.Inscripciones
 {
     public class IndexModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<Inscripcion> Inscripcion { get;set; } = default!;
+        public IList<Inscripcion> Inscripciones { get; set; }
 
         public async Task OnGetAsync()
         {
-            Inscripcion = await _context.Inscripciones
+            Inscripciones = await _context.Inscripciones
+                .Include(i => i.Estudiante)
                 .Include(i => i.Actividad)
-                .Include(i => i.Estudiante).ToListAsync();
+                .ToListAsync();
         }
     }
 }
