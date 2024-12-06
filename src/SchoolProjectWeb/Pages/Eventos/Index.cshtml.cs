@@ -20,7 +20,6 @@ namespace SchoolProjectWeb.Pages.Eventos
 
         public async Task OnGetAsync()
         {
-            // Cargar los eventos junto con sus actividades relacionadas
             Eventos = await _context.Eventos
                 .Include(e => e.Actividad)
                 .ToListAsync();

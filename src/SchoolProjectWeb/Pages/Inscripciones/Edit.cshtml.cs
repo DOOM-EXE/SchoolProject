@@ -36,8 +36,8 @@ namespace SchoolProjectWeb.Pages_Inscripciones
                 return NotFound();
             }
             Inscripcion = inscripcion;
-           ViewData["ActividadId"] = new SelectList(_context.Actividades, "Id", "Id");
-           ViewData["EstudianteId"] = new SelectList(_context.Estudiantes, "Id", "Id");
+           ViewData["ActividadId"] = new SelectList(_context.Actividades, "Id", "NombreActividad");
+           ViewData["EstudianteId"] = new SelectList(_context.Estudiantes, "Id", "Nombre");
             return Page();
         }
 

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,35 +8,62 @@ namespace SchoolProjectWeb.Pages_Inscripciones
 {
     public class CreateModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        [BindProperty]
+        public Inscripcion Inscripcion { get; set; }
+
+        // Listas de SelectList para Estudiantes y Actividades
+        public SelectList Estudiantes { get; set; }
+        public SelectList Actividades { get; set; }
+
+        // Acción OnGet para cargar Estudiantes y Actividades en los dropdowns
         public IActionResult OnGet()
         {
-        ViewData["ActividadId"] = new SelectList(_context.Actividades, "Id", "Id");
-        ViewData["EstudianteId"] = new SelectList(_context.Estudiantes, "Id", "Id");
+            // Inicializa la propiedad FechaInscripcion con la fecha actual
+            Inscripcion = new Inscripcion
+            {
+                FechaInscripcion = DateTime.Now // Asigna la fecha de hoy automáticamente
+            };
+
+            // Cargar las listas de Estudiantes y Actividades
+            Estudiantes = new SelectList(_context.Estudiantes, "Id", "Nombre");
+            Actividades = new SelectList(_context.Actividades, "Id", "NombreActividad");
+
             return Page();
         }
 
-        [BindProperty]
-        public Inscripcion Inscripcion { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        // Acción OnPost para guardar la inscripción
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
+                // Si el modelo no es válido, volver a mostrar la página con los errores de validación
+                Estudiantes = new SelectList(_context.Estudiantes, "Id", "Nombre");
+                Actividades = new SelectList(_context.Actividades, "Id", "NombreActividad");
                 return Page();
             }
 
-            _context.Inscripciones.Add(Inscripcion);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            try
+            {
+                // Agregar la inscripción a la base de datos
+                _context.Inscripciones.Add(Inscripcion);
+                _context.SaveChanges();
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error al guardar la inscripción: {ex.Message}");
+                Estudiantes = new SelectList(_context.Estudiantes, "Id", "Nombre");
+                Actividades = new SelectList(_context.Actividades, "Id", "NombreActividad");
+                return Page();
+            }
         }
     }
 }

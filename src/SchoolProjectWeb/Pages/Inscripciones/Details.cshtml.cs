@@ -12,9 +12,9 @@ namespace SchoolProjectWeb.Pages_Inscripciones
 {
     public class DetailsModel : PageModel
     {
-        private readonly SchoolProjectWeb.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(SchoolProjectWeb.Data.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -28,16 +28,19 @@ namespace SchoolProjectWeb.Pages_Inscripciones
                 return NotFound();
             }
 
-            var inscripcion = await _context.Inscripciones.FirstOrDefaultAsync(m => m.Id == id);
+            // Carga de la inscripción con Estudiante y Actividad utilizando Eager Loading (Include)
+            var inscripcion = await _context.Inscripciones
+                                            .Include(i => i.Estudiante)  // Incluye la entidad Estudiante relacionada
+                                            .Include(i => i.Actividad)   // Incluye la entidad Actividad relacionada
+                                            .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (inscripcion is not null)
+            if (inscripcion == null)
             {
-                Inscripcion = inscripcion;
-
-                return Page();
+                return NotFound();
             }
 
-            return NotFound();
+            Inscripcion = inscripcion;
+            return Page();
         }
     }
 }

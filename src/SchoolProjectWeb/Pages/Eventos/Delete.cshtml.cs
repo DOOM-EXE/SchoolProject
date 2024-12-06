@@ -29,9 +29,8 @@ namespace SchoolProjectWeb.Pages_Eventos
                 return NotFound();
             }
 
-            // Cargar el Evento con la Actividad relacionada usando Eager Loading (Include)
             var evento = await _context.Eventos
-                .Include(e => e.Actividad)  // Incluir la propiedad Actividad relacionada
+                .Include(e => e.Actividad)  
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (evento is not null)

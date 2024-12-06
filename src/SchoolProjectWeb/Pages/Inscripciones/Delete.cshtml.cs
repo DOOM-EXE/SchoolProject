@@ -29,12 +29,14 @@ namespace SchoolProjectWeb.Pages_Inscripciones
                 return NotFound();
             }
 
-            var inscripcion = await _context.Inscripciones.FirstOrDefaultAsync(m => m.Id == id);
+            var inscripcion = await _context.Inscripciones
+                                             .Include(i => i.Estudiante)  // Incluye la entidad Estudiante relacionada
+                                             .Include(i => i.Actividad)   // Incluye la entidad Actividad relacionada
+                                             .FirstOrDefaultAsync(m => m.Id == id);
 
             if (inscripcion is not null)
             {
                 Inscripcion = inscripcion;
-
                 return Page();
             }
 
