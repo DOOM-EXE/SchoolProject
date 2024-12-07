@@ -14,8 +14,7 @@ Este proyecto es un sistema de gestión para una escuela, diseñado para adminis
 
 - 👩‍🏫 Gestión de estudiantes y profesores.
 - 📚 Creación y administración de cursos.
-- 🧑‍🎓 Asignación de estudiantes a cursos.
-- 📊 Visualización de los detalles de cada curso, estudiante y profesor.
+- 📊 Visualización de los detalles de cada estudiante y profesor.
 - 🎨 Interfaz de usuario intuitiva y fácil de usar.
 
 ---
@@ -59,7 +58,7 @@ Sigue estos pasos para instalar y ejecutar el proyecto en tu máquina local:
 ## 💡 Uso
 
 - Al ejecutar la aplicación, podrás acceder a la interfaz de usuario en tu navegador 🌐.
-- Gestiona la información de estudiantes, cursos y profesores 📋, y visualiza los detalles completos de cada entidad 📑.
+- Gestiona la información de estudiantes, actividades y profesores 📋, y visualiza los detalles completos de cada entidad 📑.
 
 ---
 
