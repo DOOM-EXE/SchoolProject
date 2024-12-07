@@ -33,11 +33,17 @@
                 <span asp-validation-for="Inscripcion.FechaInscripcion" class="text-danger"></span>
             </div>
 
-
-            <!-- Botón de Submit -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Crear</button>
-                <a asp-page="Index" class="btn btn-secondary">Volver a la Lista</a>
+
+                @if (User.IsInRole("Estudiante"))
+                {
+                    <a asp-page="/Eventos/Index" class="btn btn-secondary ml-3">Volver a Eventos</a>
+                }
+                else
+                {
+                    <a asp-page="Index" class="btn btn-secondary ml-3">Volver a la Lista</a>
+                }
             </div>
         </form>
     </div>

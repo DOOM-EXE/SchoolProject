@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SchoolProjectWeb.Data;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SchoolProjectWeb.Pages.Inscripciones
 {
+    [Authorize(Roles = "Administrador")] 
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -20,10 +22,17 @@ namespace SchoolProjectWeb.Pages.Inscripciones
 
         public async Task OnGetAsync()
         {
-            Inscripciones = await _context.Inscripciones
-                .Include(i => i.Estudiante)
-                .Include(i => i.Actividad)
-                .ToListAsync();
+            try
+            {
+                Inscripciones = await _context.Inscripciones
+                    .Include(i => i.Estudiante)
+                    .Include(i => i.Actividad)
+                    .ToListAsync();
+            }
+            catch (System.Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error al cargar inscripciones: {ex.Message}");
+            }
         }
     }
 }

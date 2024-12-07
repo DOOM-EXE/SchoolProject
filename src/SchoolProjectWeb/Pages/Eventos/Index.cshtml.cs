@@ -4,11 +4,17 @@ using SchoolProjectWeb.Data;
 using SchoolProjectWeb.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+
+
 
 namespace SchoolProjectWeb.Pages.Eventos
 {
+    [Authorize(Roles = "Estudiante,Administrador")]
+
     public class IndexModel : PageModel
     {
+        
         private readonly ApplicationDbContext _context;
 
         public IndexModel(ApplicationDbContext context)

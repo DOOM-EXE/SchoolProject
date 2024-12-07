@@ -41,7 +41,12 @@
                     </dl>
 
                     <div class="form-group mt-4">
-                        <a asp-page="./Edit" asp-route-id="@Model.Evento.Id" class="btn btn-warning btn-lg">Editar</a>
+                        <!-- Mostrar el botón "Editar" solo para Administradores -->
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <a asp-page="./Edit" asp-route-id="@Model.Evento.Id" class="btn btn-warning btn-lg">Editar</a>
+                        }
+
                         <a asp-page="./Index" class="btn btn-secondary btn-lg ml-3">Volver a la Lista</a>
                     </div>
                 </div>

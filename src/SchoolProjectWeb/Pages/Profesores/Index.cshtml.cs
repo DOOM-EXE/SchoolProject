@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SchoolProjectWeb.Data;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace SchoolProjectWeb.Pages.Profesores
 {
+
+    [Authorize(Roles = "Administrador")] 
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +23,14 @@ namespace SchoolProjectWeb.Pages.Profesores
 
         public async Task OnGetAsync()
         {
-            Profesores = await _context.Profesores.ToListAsync();
+            try
+            {
+                Profesores = await _context.Profesores.ToListAsync();
+            }
+            catch (System.Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error al cargar profesores: {ex.Message}");
+            }
         }
     }
 }
